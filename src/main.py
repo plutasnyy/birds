@@ -9,7 +9,7 @@ from src.lit_module import BirdClef2022Model
 
 seed_everything(0)
 fold = 0
-data_path = Path("../birdclef-2022")
+data_path = Path("birdclef-2022")
 df = pd.read_csv(data_path / "train_metadata_new.csv")
 train_df = df[df["fold"] != fold].reset_index(drop=True)
 valid_df = df[df["fold"] == fold].reset_index(drop=True)
@@ -33,15 +33,13 @@ f1_checkpoint = ModelCheckpoint(
 )
 
 trainer = Trainer(
-    # precision=16,
-    gpus=0,
+    gpus=1,
     max_epochs=5,
     callbacks=[
         loss_checkpoint,
         f1_checkpoint,
         lr_monitor,
     ],
-    fast_dev_run=25,
 )
 
 trainer.fit(model, datamodule=datamodule)
